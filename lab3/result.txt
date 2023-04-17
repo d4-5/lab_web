@@ -1,0 +1,415 @@
+Contents of a file views/pages/storage/add.pug
+extends ../../layout
+
+block content
+  div(class='col-md-6')
+    form(id='storage-add-form' name='storage-add-form' class='form-horizontal' method="POST" action='')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='name') Number
+        div(class='col-md-9')
+          input(id='number' name='number' value=$fn.getPropOrDefault(newProduct, 'number') class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='shop') Shop
+        div(class='col-md-9')
+          input(id='shop' name='shop' value=$fn.getPropOrDefault(newProduct, 'shop') class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='capacity') Capacity
+        div(class='col-md-9')
+          input(id='capacity' name='capacity' value=$fn.getPropOrDefault(newProduct, 'capacity') class='form-control')
+      div(class='form-group')
+        div(class='col-md-12')
+          button(type='submit' class='btn btn-primary') CreateEnd of file views/pages/storage/add.pug
+Contents of a file views/pages/storage/delete.pug
+extends ../../layout
+
+block content
+  div(class='col-md-6')
+    form(id='storage-add-form' name='storage-delete-form' class='form-horizontal' method="POST" action='')
+      input(id='id' type="hidden" name='id' value=product.id class='form-control')
+      div(class='form-group')
+        div(class='col-md-12') #{storage.number} #{storage.shop} #{storage.capacity}
+      div(class='form-group')
+        div(class='col-md-12')
+          button(type='submit' class='btn btn-primary') DeleteEnd of file views/pages/storage/delete.pug
+Contents of a file views/pages/storage/index.pug
+extends ../../layout
+
+block content
+  div Storage Home PageEnd of file views/pages/storage/index.pug
+Contents of a file views/pages/storage/list.pug
+extends ../../layout
+
+block content
+  h3 Storage List
+
+  a(href='/storage/add' class="btn btn-default") Add
+
+  table(class="table")
+    thead
+      tr
+        th Number
+        th Shop
+        th Capacity
+    tbody
+      each storage in storages
+        tr
+          td #{storage.number}
+          td #{storage.shop}
+          td #{storage.capacity}
+          tdEnd of file views/pages/storage/list.pug
+Contents of a file views/pages/storage/update.pug
+extends ../../layout
+
+block content
+  div(class='col-md-6')
+    form(id='storage-add-form' name='storage-add-form' class='form-horizontal' method="POST" action='')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='name') Number
+        div(class='col-md-9')
+          input(id='number' name='number' value=$fn.getPropOrDefault(newProduct, 'number') class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='shop') Shop
+        div(class='col-md-9')
+          input(id='shop' name='shop' value=$fn.getPropOrDefault(newProduct, 'shop') class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='capacity') Capacity
+        div(class='col-md-9')
+          input(id='capacity' name='capacity' value=$fn.getPropOrDefault(newProduct, 'capacity') class='form-control')
+      div(class='form-group')
+        div(class='col-md-12')
+          button(type='submit' class='btn btn-primary') UpdateEnd of file views/pages/storage/update.pug
+Contents of a file models/product.js
+﻿const mongoose = require('mongoose')
+
+const Schema = mongoose.Schema
+
+const productSchema = new Schema({
+  code: { type: String, required: true, unique: true, max: 250 },
+  name: { type: String, required: true, max: 250 },
+  country: { type: String, required: true, max: 250 },
+})
+
+module.exports = mongoose.model('Product', productSchema, 'product')
+End of file models/product.js
+Contents of a file models/productShop.js
+﻿const mongoose = require('mongoose')
+
+const Schema = mongoose.Schema
+
+const productShopSchema = new Schema({
+  shop: { type: String, required: true, max: 250 },
+  product: { type: String, required: true, max: 250 },
+})
+
+module.exports = mongoose.model('ProductShop', productShopSchema, 'productShop')
+End of file models/productShop.js
+Contents of a file models/productStorage.js
+﻿const mongoose = require('mongoose')
+
+const Schema = mongoose.Schema
+
+const productStorageSchema = new Schema({
+  storage: { type: Number, required: true, max: 999 },
+  product: { type: String, required: true, max: 250 },
+})
+
+module.exports = mongoose.model('ProductStorage', productStorageSchema, 'productStorage')
+End of file models/productStorage.js
+Contents of a file models/shop.js
+﻿const mongoose = require('mongoose')
+
+const Schema = mongoose.Schema
+
+const shopSchema = new Schema({
+  name: { type: String, required: true, max: 250 },
+  address: { type: String, required: true, unique: true, max: 250 },
+  capacity: { type: Number, required: true, max: 999 },
+})
+
+module.exports = mongoose.model('Shop', shopSchema, 'shop')
+End of file models/shop.js
+Contents of a file models/storage.js
+﻿const mongoose = require('mongoose')
+
+const Schema = mongoose.Schema
+
+const storageSchema = new Schema({
+  number: { type: Number, required: true, unique: true, max: 999 },
+  shop: { type: String, required: true, max: 250 },
+  capacity: { type: Number, required: true, max: 999 },
+})
+
+module.exports = mongoose.model('Storage', storageSchema, 'storage')
+End of file models/storage.js
+Contents of a file controllers/index.js
+'use strict'
+
+module.exports = {
+  index (req, res) {
+    res.render('pages/index')
+  }
+}
+End of file controllers/index.js
+Contents of a file controllers/shop.js
+'use strict'
+
+const { body, validationResult } = require('express-validator/check')
+const { sanitizeBody } = require('express-validator/filter')
+
+const shopListService = require('./../services/shop.all')
+const shopCreateService = require('./../services/shop.create')
+const shopUpdateService = require('./../services/shop.update')
+const shopDeleteService = require('./../services/shop.delete')
+const shopByIdService = require('./../services/shop.byId')
+
+module.exports = {
+  index (req, res) {
+    res.render('pages/shop/index')
+  },
+  async shopList (req, res) {
+    try {
+      const shopList = await shopListService()
+      res.render('pages/shop/list', {
+        shops: shopList
+      })
+    } catch (error) {
+      res.render('pages/shop/list', {
+        shops: [],
+        errors: [{ msg: error.message }]
+      })
+    }
+  },
+  createShopForm (req, res) {
+    res.render('pages/shop/add')
+  },
+  postCreateShop: [
+    body('name')
+      .isLength({ min: 1 }).trim().withMessage('Name field must be specified.'),
+    body('address')
+      .isLength({ min: 1 }).trim().withMessage('Address field must be specified.'),
+    body('capacity')
+      .isLength({ min: 1 }).trim().withMessage('Capacity field must be specified.'),
+    sanitizeBody('name').escape(),
+    sanitizeBody('address').escape(),
+    sanitizeBody('capacity').escape(),
+    async (req, res) => {
+      const shopData = req.body
+      const errors = validationResult(req)
+
+      if (errors.isEmpty()) {
+        try {
+          const shop = await shopCreateService(shopData)
+          req.flash('info', `Shop "${shop.name}" "${shop.address}" "${shop.capacity}" is Added`)
+          res.redirect('/shop/list')
+        } catch (error) {
+          res.render('pages/shop/add', {
+            errors: [{ msg: error.message }]
+          })
+        }
+      } else {
+        res.render('pages/shop/add', {
+          errors: errors.array()
+        })
+      }
+    }
+  ],
+  async updateShopForm (req, res, next) {
+    try {
+      const shop = await shopByIdService(req.params.id)
+      if (!shop) {
+        const errorServer = new Error('Not found')
+        errorServer.status = 404
+        next(errorServer)
+        return
+      }
+      res.render('pages/shop/update', { shop: shop })
+    } catch (error) {
+      const errorServer = new Error(`Internal server error: ${error.message}`)
+      errorServer.status = 500
+      next(errorServer)
+    }
+  },
+  putUpdateShop: [
+    body('name')
+      .isLength({ min: 1 }).trim().withMessage('Name field must be specified.'),
+    body('address')
+      .isLength({ min: 1 }).trim().withMessage('Address field must be specified.'),
+    body('capacity')
+      .isLength({ min: 1 }).trim().withMessage('Capacity field must be specified.'),
+    sanitizeBody('name').escape(),
+    sanitizeBody('address').escape(),
+    sanitizeBody('capacity').escape(),
+    async (req, res, next) => {
+      const shopData = req.body
+
+      const errors = validationResult(req)
+      if (errors.isEmpty()) {
+        try {
+          const updatedShop = await shopUpdateService(shopData)
+          req.flash('info', `Shop "${updatedShop.name} ${updatedShop.address} ${updatedShop.capacity}" is Updated`)
+          res.redirect('/shop/list')
+        } catch (error) {
+          res.render('pages/shop/update', {
+            shop: shopData,
+            newShop: shopData,
+            errors: [{ msg: error.message }]
+          })
+        }
+      } else {
+        res.render('pages/shop/list', {
+          shop: {},
+          newShop: shopData,
+          errors: errors.array()
+        })
+      }
+    }
+  ],
+  deleteShopFrom (req, res, next) {
+    shopByIdService(req.params.id)
+      .then(shop => {
+        if (shop) {
+          res.render('pages/shop/delete', { shop: shop })
+        } else {
+          const errorNotFound = new Error('Not found')
+          errorNotFound.status = 404
+          next(errorNotFound)
+        }
+      })
+      .catch(error => {
+        const errorServer = new Error(`Internal server error: ${error.message}`)
+        errorServer.status = 500
+        next(errorServer)
+      })
+  },
+  deleteShop (req, res, next) {
+    shopDeleteService(req.body)
+      .then(shop => {
+        req.flash('info', `Shop "${shop.name} ${shop.address} ${shop.capacity}" is Deleted`)
+        res.redirect('/shop/list')
+      })
+      .catch(error => {
+        res.render('pages/shop/delete', {
+          shop: req.body,
+          errors: [{ msg: error.message }]
+        })
+      })
+  }
+}
+End of file controllers/shop.js
+Contents of a file controllers/storage.js
+'use strict'
+
+const { body, validationResult } = require('express-validator/check')
+const { sanitizeBody } = require('express-validator/filter')
+
+const storageListService = require('./../services/storage.all')
+const storageCreateService = require('./../services/storage.create')
+
+function _getMockStorage (id = null) {
+  return {
+    number: 123,
+    shop: 'Shop1',
+    capacity: 40
+  }
+}
+
+module.exports = {
+  index (req, res) {
+    res.render('pages/storage/index')
+  },
+  async storageList (req, res) {
+    try {
+      const storageList = await storageListService()
+      res.render('pages/storage/list', {
+        storages: storageList
+      })
+    } catch (error) {
+      res.render('pages/storage/list', {
+        storages: [],
+        errors: [{ msg: error.message }]
+      })
+    }
+  },
+  createStorageForm (req, res) {
+    res.render('pages/storage/add')
+  },
+  postCreateStorage: [
+    body('number')
+      .isLength({ min: 1 }).trim().withMessage('Number field must be specified.'),
+    body('shop')
+      .isLength({ min: 1 }).trim().withMessage('Shop field must be specified.'),
+    body('capacity')
+      .isLength({ min: 1 }).trim().withMessage('Capacity field must be specified.'),
+    sanitizeBody('number').escape(),
+    sanitizeBody('shop').escape(),
+    sanitizeBody('capacity').escape(),
+    async (req, res) => {
+      const storageData = req.body
+      const errors = validationResult(req)
+
+      if (errors.isEmpty()) {
+        try {
+          const storage = await storageCreateService(storageData)
+          req.flash('info', `Storage "${storage.number}" "${storage.shop}" "${storage.capacity}" is Added`)
+          res.redirect('/storage/list')
+        } catch (error) {
+          res.render('pages/storage/add', {
+            errors: [{ msg: error.message }]
+          })
+        }
+      } else {
+        res.render('pages/storage/add', {
+          errors: errors.array()
+        })
+      }
+    }
+  ],
+  updateStorageForm (req, res) {
+    const mockStorage = _getMockStorage(req.body.id)
+
+    res.render('pages/storage/update', { storage: mockStorage })
+  },
+  putUpdateStorage (req, res) {
+    const success = true
+    const storageData = req.body
+    const mockStorage = _getMockStorage(storageData.id)
+
+    if (success) {
+      req.flash('info', `Storage "#${storageData.number} ${storageData.shop} ${storageData.capacity}" is Updated`)
+      res.redirect('/storage/list')
+    } else {
+      res.render('pages/storage/update', {
+        storage: mockStorage,
+        newStorage: storageData,
+        errors: [{ 'msg': 'Error Omg' }]
+      })
+    }
+  },
+  deleteStorageFrom (req, res) {
+    const mockStorage = _getMockStorage(req.body.id)
+
+    res.render('pages/storage/delete', { storage: mockStorage })
+  },
+  deleteStorage (req, res) {
+    const success = true
+    const storageData = req.body
+    const mockStorage = _getMockStorage(storageData.id)
+
+    if (success) {
+      req.flash('info', `Storage "#${storageData.number} ${storageData.shop} ${storageData.capacity}" is Deleted`)
+      res.redirect('/storage/list')
+    } else {
+      res.render('pages/storage/delete', {
+        storage: mockStorage,
+        errors: [{ 'msg': 'Error Omg' }]
+      })
+    }
+  }
+}
+End of file controllers/storage.js

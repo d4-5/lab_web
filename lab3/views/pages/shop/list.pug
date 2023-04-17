@@ -1,0 +1,25 @@
+extends ../../layout
+
+block content
+  h3 Shop List
+
+  a(href='/shop/add' class="btn btn-default") Add
+
+  table(class="table")
+    thead
+      tr
+        th Name
+        th Address
+        th Capacity
+    tbody
+      each shop in shops
+        tr
+          td #{shop.name}
+          td #{shop.address}
+          td #{shop.capacity}
+          td
+            form(action=`remove/${shop.id}`, method='get')
+              button(type='submit') Delete
+          td
+            form(action=`edit/${shop.id}`, method='get')
+              button(type='submit') Edit

@@ -1,0 +1,18 @@
+extends ../../layout
+
+block content
+  h3 Products in Shop List
+
+  a(href='/productShop/add' class="btn btn-default") Add
+
+  table(class="table")
+    thead
+      tr
+        th Shop
+        th Product
+    tbody
+      each productShop in productShops
+        tr
+          td #{productShop.shop}
+          td #{productShop.product}
+          td

@@ -1,0 +1,31 @@
+﻿extends ../layout
+
+block content
+  div(class='breadcrumb')
+    div= title
+  div.list-group
+    div.list-group-item
+      span(class='list-icon glyphicon glyphicon-briefcase')
+      a(href='/shop/list') Shops
+      a(href='/shop/add') 
+        span(class='list-icon glyphicon glyphicon-plus')
+    div.list-group-item
+      span(class='list-icon glyphicon glyphicon-globe')
+      a(href='/product/list') Products
+      a(href='/product/add')
+        span(class='list-icon glyphicon glyphicon-plus')
+    div.list-group-item
+      span(class='list-icon glyphicon glyphicon-book')
+      a(href='/storage/list') Storages
+      a(href='/storage/add')
+        span(class='list-icon glyphicon glyphicon-plus')
+    div.list-group-item
+      span(class='list-icon glyphicon glyphicon-book')
+      a(href='/prodcutStorage/list') Products in Storage
+      a(href='/productStorage/add')
+        span(class='list-icon glyphicon glyphicon-plus')
+    div.list-group-item
+      span(class='list-icon glyphicon glyphicon-book')
+      a(href='/productShop/list') Prodcuts in Shop
+      a(href='/productShop/add')
+        span(class='list-icon glyphicon glyphicon-plus')

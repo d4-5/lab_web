@@ -1,0 +1,25 @@
+extends ../../layout
+
+block content
+  h3 Storage List
+
+  a(href='/storage/add' class="btn btn-default") Add
+
+  table(class="table")
+    thead
+      tr
+        th Number
+        th Shop
+        th Capacity
+    tbody
+      each storage in storages
+        tr
+          td #{storage.number}
+          td #{storage.shop}
+          td #{storage.capacity}
+          td
+            form(action=`remove/${storage.id}`, method='get')
+              button(type='submit') Delete
+          td
+            form(action=`edit/${storage.id}`, method='get')
+              button(type='submit') Edit

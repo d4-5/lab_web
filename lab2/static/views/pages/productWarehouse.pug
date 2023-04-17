@@ -1,0 +1,33 @@
+extends ../layout.pug
+
+block prepend styles
+    link(rel='stylesheet' href='//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css')
+
+block content
+    div(class='breadcrumb')
+        li= title
+    form(id='productWarehouse-add-form' name='productWarehouse-add-form' class='form-inline' action='')
+        div(class='form-group')
+            div(class='col-md-4')
+                label(for='product') Product
+            div(class='col-md-3')
+                select(id='product' name='product' class='form-control' required='required')
+                    option(value='' selected='selected') Select Product
+        div(class='form-group')
+            div(class='col-md-4')
+                label(for='warehouse') Warehouse
+            div(class='col-md-3')
+                select(id='warehouse' name='warehouse' class='form-control' required='required')
+                    option(value='' selected='selected') Select Warehouse
+        div(class='form-group')
+            div(class='col-md-12')
+                button(type='submit' id='btn-create' class='btn btn-primary') Create
+                input(type='hidden' id='update-item' name='update-item')
+        div.list-wrapper
+            table(id='productWarehouse-list')
+block append scripts
+    script(src='/static/js/models/product.js')
+    script(src='/static/js/models/warehouse.js')
+    script(src='/static/js/models/productWarehouse.js')
+    script(src='//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js')
+    script(src='/static/js/views/productWarehouse.js')

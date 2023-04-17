@@ -1,0 +1,25 @@
+extends ../../layout
+
+block content
+  h3 Product List
+
+  a(href='/product/add' class="btn btn-default") Add
+
+  table(class="table")
+    thead
+      tr
+        th Code
+        th Name
+        th Country
+    tbody
+      each product in products
+        tr
+          td #{product.code}
+          td #{product.name}
+          td #{product.country}
+          td
+            form(action=`remove/${product.id}`, method='get')
+              button(type='submit') Delete
+          td
+            form(action=`edit/${product.id}`, method='get')
+              button(type='submit') Edit

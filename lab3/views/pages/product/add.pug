@@ -1,0 +1,23 @@
+extends ../../layout
+
+block content
+  div(class='col-md-6')
+    form(id='product-add-form' name='product-add-form' class='form-horizontal' method="POST" action='')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='code') Code
+        div(class='col-md-9')
+          input(id='code' name='code' value=$fn.getPropOrDefault(newProduct, 'code') class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='name') Name
+        div(class='col-md-9')
+          input(id='name' name='name' value=$fn.getPropOrDefault(newProduct, 'name') class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='country') Country
+        div(class='col-md-9')
+          input(id='country' name='country' value=$fn.getPropOrDefault(newProduct, 'country') class='form-control')
+      div(class='form-group')
+        div(class='col-md-12')
+          button(type='submit' class='btn btn-primary') Create

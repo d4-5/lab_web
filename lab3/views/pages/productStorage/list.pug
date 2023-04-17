@@ -1,0 +1,18 @@
+extends ../../layout
+
+block content
+  h3 Products in Storage List
+
+  a(href='/productStorage/add' class="btn btn-default") Add
+
+  table(class="table")
+    thead
+      tr
+        th Storage
+        th Product
+    tbody
+      each productStorage in productStorages
+        tr
+          td #{productStorage.storage}
+          td #{productStorage.product}
+          td

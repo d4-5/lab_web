@@ -1,0 +1,23 @@
+extends ../../layout
+
+block content
+  div(class='col-md-6')
+    form(id='shop-add-form' name='shop-add-form' class='form-horizontal' method="POST" action='')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='name') Name
+        div(class='col-md-9')
+          input(id='name' name='name' value=$fn.getPropOrDefault(newProduct, 'name') class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='address') Address
+        div(class='col-md-9')
+          input(id='address' name='address' value=$fn.getPropOrDefault(newProduct, 'address') class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='capacity') Capacity
+        div(class='col-md-9')
+          input(id='capacity' name='capacity' value=$fn.getPropOrDefault(newProduct, 'capacity') class='form-control')
+      div(class='form-group')
+        div(class='col-md-12')
+          button(type='submit' class='btn btn-primary') Create

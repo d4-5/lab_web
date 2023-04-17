@@ -1,0 +1,24 @@
+extends ../../layout
+
+block content
+  div(class='col-md-6')
+    form(id='shop-update-form' name='shop-update-form' class='form-horizontal' method="POST" action='')
+      input(id='id' name='id' type='hidden' value=shop.id)
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='name') Name
+        div(class='col-md-9')
+          input(id='name' name='name' value=$fn.getPropOrDefault(newShop, 'name', shop.name) class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='address') Address
+        div(class='col-md-9')
+          input(id='address' name='address' value=$fn.getPropOrDefault(newShop, 'address', shop.address) class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='capacity') Capacity
+        div(class='col-md-9')
+          input(id='capacity' name='capacity' value=$fn.getPropOrDefault(newShop, 'capacity', shop.capacity) class='form-control')
+      div(class='form-group')
+        div(class='col-md-12')
+          button(type='submit' class='btn btn-primary') Update
