@@ -23,6 +23,7 @@ function initAddForm () {
     if (!isNumberExist && isShopExist) {
       warehouseModel.Create(warehouseData)
       e.target.reset()
+      initList()
     } else {
       if (isNumberExist) {
         alert('Number already exists!')
@@ -34,7 +35,7 @@ function initAddForm () {
   })
 }
 
-function initList() {
+function calculateWarehouseCapacities() {
   const warehouses = warehouseModel.Select();
   const productWarehouses = productWarehouseModel.Select();
 
@@ -57,17 +58,34 @@ function initList() {
       usedCapacityPercent: `<span class="${capacityStatusClass}">${usedCapacityPercent}%</span>`,
     };
   });
+  
+  return warehouseCapacities;
+}
 
-  window.jQuery("#warehouse-list").DataTable({
+function initList() {
+  const warehouseCapacities = calculateWarehouseCapacities();
+
+  const $dataTable = window.jQuery("#warehouse-list");
+  
+  if ($.fn.dataTable.isDataTable($dataTable)) {
+    $dataTable.DataTable().destroy();
+  }
+
+  $dataTable.DataTable({
     data: warehouseCapacities,
     columns: [
       { title: "Number", data: "number" },
       { title: "Shop", data: "shop" },
-      { title: "Capacity", data: "totalCapacity" },
+      { title: "Capacity", data: "capacity" },
       {
         title: "Used Capacity",
-        data: "usedCapacityPercent",
-      },
+        data: null,
+        render: function (data, type, row, meta) {
+          const capacityStatusClass =
+            row.usedCapacityPercent < 20 ? "bg-danger" : "";
+          return `<span class="${capacityStatusClass}">${row.usedCapacityPercent}</span>`;
+        },
+      },      
       {
         title: "Action",
         data: null,
@@ -79,7 +97,7 @@ function initList() {
           return `${editButton}&nbsp;&nbsp;${deleteButton}`;
         },
       },
-    ],
+    ],    
   });
 }
 
