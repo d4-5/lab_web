@@ -4,14 +4,11 @@ const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 
 const productShopListService = require('./../services/productShop.all')
-const productShopCreateService = require('./../services/productShop.create')
-
-function _getMockProductShop (id = null) {
-  return {
-    shop: 'Shop1',
-    product: 'Product1',
-  }
-}
+const productStorageCreateService = require('./../services/productStorage.create')
+const productShopDeleteService = require('./../services/productShop.delete')
+const productShopByIdService = require('./../services/productShop.byId')
+const storageListService = require('./../services/storage.all')
+const productStorageListService = require('./../services/productStorage.all')
 
 module.exports = {
   index (req, res) {
@@ -30,77 +27,64 @@ module.exports = {
       })
     }
   },
-  createProductShopForm (req, res) {
-    res.render('pages/productShop/add')
+  async toStorageProductShopForm (req, res, next) {
+    try {
+      const productShop = await productShopByIdService(req.params.id)
+      let storageList = await storageListService()
+      if (!productShop) {
+        const errorServer = new Error('Not found')
+        errorServer.status = 404
+        next(errorServer)
+        return
+      }
+      res.render('pages/productShop/toStorage', { 
+        productShop: productShop,
+        storages: storageList
+       })
+    } catch (error) {
+      const errorServer = new Error(`Internal server error: ${error.message}`)
+      errorServer.status = 500
+      next(errorServer)
+    }
   },
-  postCreateProductShop: [
-    body('shop')
-      .isLength({ min: 1 }).trim().withMessage('Shop field must be specified.'),
-    body('product')
-      .isLength({ min: 1 }).trim().withMessage('Product field must be specified.'),
-    sanitizeBody('shop').escape(),
-    sanitizeBody('product').escape(),
-    async (req, res) => {
-
-        const productShopData = req.body
+  putToStorageProductShop: [
+    body('storage')
+    .isLength({ min: 1 }).trim().withMessage('Storage field must be specified.'),
+    sanitizeBody('storage').escape(),
+    async (req, res, next) => {
+      let productStorageData = req.body
+      const productShop = await productShopByIdService(req.body.id)
+      const storageList = await storageListService()
+      productStorageData["product"] = productShop.product
+      const storageData = await storageList.find(s => s.number == req.body.storage)
+      const productStorageList = await productStorageListService()
+      const totalUsed = productStorageList.filter(ps => ps.storage == req.body.storage)
+      if(totalUsed.length === storageData.capacity){
+        req.flash('info', `Can't move product "${productShop.product}" to storage "${req.body.storage}"`)
+        res.redirect('/productStorage/list')
+      } else {
         const errors = validationResult(req)
-
-        if (errors.isEmpty()) {
-          try {
-            const productShop = await productShopCreateService(productShopData)
-            req.flash('info', `ProductShop "${productShop.shop}" "${productShop.product}" is Added`)
-            res.redirect('/productShop/list')
+      if (errors.isEmpty()) {
+        try {
+          await productShopDeleteService(req.body)
+          await productStorageCreateService(productStorageData)
+          req.flash('info', `Product "${productShop.product}" moved to storage "${productStorageData.storage}"`)
+          res.redirect('/productShop/list')
         } catch (error) {
-          res.render('pages/productShop/add', {
+          res.render('pages/productShop/toStorage', {
+            productShop: productShop,
+            storages: storageList,
             errors: [{ msg: error.message }]
           })
         }
       } else {
-        res.render('pages/productShop/add', {
+        res.render('pages/productShop/delete', {
+          productShop: {},
+          productStorageData: productStorageData,
           errors: errors.array()
         })
       }
     }
-  ],
-  updateProductShopForm (req, res) {
-    const mockProductShop = _getMockProductShop(req.body.id)
-
-    res.render('pages/productShop/update', { productShop: mockProductShop })
-  },
-  putUpdateProductShop (req, res) {
-    const success = true
-    const productShopData = req.body
-    const mockProductShop = _getMockProductShop(productShopData.id)
-
-    if (success) {
-      req.flash('info', `ProductShop "#${productShopData.shop} ${productShopData.product}" is Updated`)
-      res.redirect('/productShop/list')
-    } else {
-      res.render('pages/productShop/update', {
-        productShop: mockProductShop,
-        newProductShop: productShopData,
-        errors: [{ 'msg': 'Error Omg' }]
-      })
     }
-  },
-  deleteProductShopFrom (req, res) {
-    const mockProductShop = _getMockProductShop(req.body.id)
-
-    res.render('pages/productShop/delete', { productShop: mockProductShop })
-  },
-  deleteProductShop (req, res) {
-    const success = true
-    const productShopData = req.body
-    const mockProductShop = _getMockProductShop(productShopData.id)
-
-    if (success) {
-      req.flash('info', `ProductShop "#${productShopData.shop} ${productShopData.product}" is Deleted`)
-      res.redirect('/productShop/list')
-    } else {
-      res.render('pages/productShop/delete', {
-        storage: mockProductShop,
-        errors: [{ 'msg': 'Error Omg' }]
-      })
-    }
-  }
+  ]
 }

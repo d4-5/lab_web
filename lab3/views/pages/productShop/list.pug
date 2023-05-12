@@ -16,3 +16,5 @@ block content
           td #{productShop.shop}
           td #{productShop.product}
           td
+            form(action=`toStorage/${productShop.id}`, method='get')
+              button(type='submit') Move to Storage

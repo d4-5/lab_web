@@ -11,12 +11,14 @@ block content
         th Number
         th Shop
         th Capacity
+        th Used capacity
     tbody
       each storage in storages
         tr
           td #{storage.number}
           td #{storage.shop}
           td #{storage.capacity}
+          td(class= storage.percentUsed < 20 ? "text-danger" : "") #{Math.round(storage.percentUsed)}%
           td
             form(action=`remove/${storage.id}`, method='get')
               button(type='submit') Delete

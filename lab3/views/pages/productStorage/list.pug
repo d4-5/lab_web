@@ -1,7 +1,7 @@
 extends ../../layout
 
 block content
-  h3 Products in Storage List
+  h3 Product List
 
   a(href='/productStorage/add' class="btn btn-default") Add
 
@@ -16,3 +16,11 @@ block content
           td #{productStorage.storage}
           td #{productStorage.product}
           td
+            form(action=`remove/${productStorage.id}`, method='get')
+              button(type='submit') Delete
+          td
+            form(action=`toStorage/${productStorage.id}`, method='get')
+              button(type='submit') Move Product to another Storage
+          td
+            form(action=`toShop/${productStorage.id}`, method='get')
+              button(type='submit') Move Product to Shop

@@ -9,6 +9,7 @@ const storageUpdateService = require('./../services/storage.update')
 const storageDeleteService = require('./../services/storage.delete')
 const storageByIdService = require('./../services/storage.byId')
 const shopListService = require('./../services/shop.all')
+const productStorageListService = require('./../services/productStorage.all')
 
 module.exports = {
   index (req, res) {
@@ -17,8 +18,24 @@ module.exports = {
   async storageList (req, res) {
     try {
       const storageList = await storageListService()
+      const productStorageList = await productStorageListService()
+      
+      const newStorageList = storageList.map((storage) => {
+        
+        const productsInStorage = productStorageList.filter((ps) => ps.storage === storage.number);
+        const totalUsedCapacity = productsInStorage.length;
+        const percentUsed = totalUsedCapacity / storage.capacity * 100;
+  
+        return {
+          number : storage.number,
+          shop : storage.shop,
+          capacity : storage.capacity,
+          percentUsed: percentUsed,
+        };
+      });
+      
       res.render('pages/storage/list', {
-        storages: storageList
+        storages: newStorageList,
       })
     } catch (error) {
       res.render('pages/storage/list', {

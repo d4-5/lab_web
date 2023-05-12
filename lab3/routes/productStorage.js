@@ -1,16 +1,19 @@
-'use strict';
+'use strict'
 
-const express = require('express');
-const router = express.Router();
-const productStorageController = require('./../controllers/productStorage');
+const express = require('express')
+const router = express.Router()
 
-router.get('/', productStorageController.index);
-router.get('/list', productStorageController.productStorageList);
-router.get('/add', productStorageController.createProductStorageForm);
-router.post('/add', productStorageController.postCreateProductStorage);
-router.get('/edit/:id', productStorageController.updateProductStorageForm);
-router.post('/edit/:id', productStorageController.putUpdateProductStorage);
-router.get('/remove/:id', productStorageController.deleteProductStorageFrom);
-router.post('/remove/:id', productStorageController.deleteProductStorage);
+const productStorageController = require('./../controllers/productStorage')
 
-module.exports = router;
+router.get('/', productStorageController.index)
+router.get('/list', productStorageController.productStorageList)
+router.get('/add', productStorageController.createProductStorageForm)
+router.post('/add', productStorageController.postCreateProductStorage)
+router.get('/toStorage/:id', productStorageController.toStorageProductStorageForm)
+router.post('/toStorage/:id', productStorageController.putToStorageProductStorage)
+router.get('/toShop/:id', productStorageController.toShopProductStorageForm)
+router.post('/toShop/:id', productStorageController.putToShopProductStorage)
+router.get('/remove/:id', productStorageController.deleteProductStorageFrom)
+router.post('/remove/:id', productStorageController.deleteProductStorage)
+
+module.exports = router
