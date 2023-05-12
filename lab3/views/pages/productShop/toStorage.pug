@@ -1,0 +1,17 @@
+extends ../../layout
+
+block content
+  div(class='col-md-6')
+    form(id='productShop-add-form' name='productShop-add-form' class='form-horizontal' method="POST" action='')
+      input(id='id' type="hidden" name='id' value=productShop.id class='form-control')
+      div(class='form-group')
+        div(class='col-md-3')
+          label(for='storage') Storage
+        div(class='col-md-9')
+          select(id='storage' name='storage' class='form-control')
+            option(value='') Select a storage
+            each storage in storages
+              option(value=storage.number)= `${storage.number} , ${storage.shop}`
+      div(class='form-group')
+        div(class='col-md-12')
+          button(type='submit' class='btn btn-primary') Update
