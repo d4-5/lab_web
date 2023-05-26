@@ -1,7 +1,6 @@
 'use strict'
 
-const { body, validationResult } = require('express-validator/check')
-const { sanitizeBody } = require('express-validator/filter')
+const { body, validationResult, sanitizeBody } = require('express-validator')
 
 const shopListService = require('./../services/shop.all')
 const shopCreateService = require('./../services/shop.create')
