@@ -9,3 +9,18 @@ const shopSchema = new Schema({
 })
 
 module.exports = mongoose.model('Shop', shopSchema, 'shop')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
